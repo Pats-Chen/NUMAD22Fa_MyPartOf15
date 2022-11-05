@@ -18,17 +18,19 @@ public class FriendTvAdapter extends RecyclerView.Adapter<FriendTvViewHolder> {
 
     private List<Friend> results;
     private final Context context;
+    private OnFriendClickListener onFriendClickListener;
 
-    public FriendTvAdapter(@NonNull List<Friend> results, @NonNull Context context) {
+    public FriendTvAdapter(@NonNull List<Friend> results, @NonNull Context context, OnFriendClickListener onFriendClickListener) {
         this.results = results;
         this.context = context;
+        this.onFriendClickListener = onFriendClickListener;
     }
 
     @NonNull
     @Override
     public FriendTvViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_firebase_friend_tv, parent, false);
-        return new FriendTvViewHolder(view);
+        return new FriendTvViewHolder(view, onFriendClickListener);
     }
 
     @Override
@@ -53,5 +55,9 @@ public class FriendTvAdapter extends RecyclerView.Adapter<FriendTvViewHolder> {
     @Override
     public int getItemCount() {
         return results.size();
+    }
+
+    public interface OnFriendClickListener {
+        void onFriendClick(int position);
     }
 }

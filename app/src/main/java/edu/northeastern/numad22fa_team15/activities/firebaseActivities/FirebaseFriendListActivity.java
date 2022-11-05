@@ -34,7 +34,7 @@ import edu.northeastern.numad22fa_team15.R;
 import edu.northeastern.numad22fa_team15.firebaseFriendTvRecyclerUtil.FriendTvAdapter;
 import edu.northeastern.numad22fa_team15.model.Friend;
 
-public class FirebaseFriendListActivity extends AppCompatActivity {
+public class FirebaseFriendListActivity extends AppCompatActivity implements FriendTvAdapter.OnFriendClickListener {
 
     private static final String TAG = "FirebaseFriendListActivity______";
 
@@ -75,7 +75,7 @@ public class FirebaseFriendListActivity extends AppCompatActivity {
         friendResults = new ArrayList<Friend>();
         friendsRecyclerView = findViewById(R.id.friends_recycler_view);
         friendsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        friendsRecyclerView.setAdapter(new FriendTvAdapter(friendResults, this));
+        friendsRecyclerView.setAdapter(new FriendTvAdapter(friendResults, this, this));
 
         // Get the "numOfStickerSent" reference for our database and add ValueEventListener to it.
         numOfStickersDatabaseReference = userDatabaseReference.child("numOfStickersSent");
@@ -143,6 +143,14 @@ public class FirebaseFriendListActivity extends AppCompatActivity {
                 Log.v(TAG, errorMessage);
             }
         });
+    }
+
+    @Override
+    public void onFriendClick(int position) {
+        Log.v(TAG, "onFriendClick: clicked.");
+        friendResults.get(position);
+        displayMessageInSnackbar(findViewById(android.R.id.content), "A FRIEND ITEM IS CLICKED", Snackbar.LENGTH_SHORT);
+        // TODO: openSendStickerDialog
     }
 
     /**
@@ -310,5 +318,4 @@ public class FirebaseFriendListActivity extends AppCompatActivity {
         Log.v(TAG, "onStop()");
         super.onStop();
     }
-
 }
