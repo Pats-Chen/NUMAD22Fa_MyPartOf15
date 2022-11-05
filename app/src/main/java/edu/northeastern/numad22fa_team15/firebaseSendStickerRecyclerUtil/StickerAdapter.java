@@ -32,10 +32,10 @@ public class StickerAdapter extends RecyclerView.Adapter<StickerViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull StickerViewHolder holder, int position) {
-        // TO DO:
-        // Render sticker image based on sticker resource ID
-
+        // TODO: Render sticker image based on sticker resource ID
+        // Can not send unknown sticker here.
         holder.itemStickerResourceID.setText(results.get(position).getStickerResourceID());
+        holder.itemStickerImage.setImageResource(Integer.valueOf(results.get(position).getStickerResourceID()));
     }
 
     /**

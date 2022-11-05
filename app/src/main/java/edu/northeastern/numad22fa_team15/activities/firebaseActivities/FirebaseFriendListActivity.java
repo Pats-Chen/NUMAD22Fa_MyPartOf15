@@ -27,12 +27,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import edu.northeastern.numad22fa_team15.R;
 import edu.northeastern.numad22fa_team15.firebaseFriendTvRecyclerUtil.FriendTvAdapter;
+import edu.northeastern.numad22fa_team15.firebaseSendStickerRecyclerUtil.StickerAdapter;
 import edu.northeastern.numad22fa_team15.model.Friend;
+import edu.northeastern.numad22fa_team15.model.Sticker;
 
 public class FirebaseFriendListActivity extends AppCompatActivity implements FriendTvAdapter.OnFriendClickListener {
 
@@ -49,6 +52,12 @@ public class FirebaseFriendListActivity extends AppCompatActivity implements Fri
 
     private List<Friend> friendResults;
     private RecyclerView friendsRecyclerView;
+
+    private static final int numberOfAvailableSticker = 2;
+    private static final List<Sticker> availableStickerList = Arrays.asList(
+            new Sticker(String.valueOf(R.drawable.sticker_1)),
+            new Sticker(String.valueOf(R.drawable.sticker_2)),
+            new Sticker(String.valueOf(R.drawable.sticker_unknown)));
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,9 +157,9 @@ public class FirebaseFriendListActivity extends AppCompatActivity implements Fri
     @Override
     public void onFriendClick(int position) {
         Log.v(TAG, "onFriendClick: clicked.");
-        friendResults.get(position);
+
         displayMessageInSnackbar(findViewById(android.R.id.content), "A FRIEND ITEM IS CLICKED", Snackbar.LENGTH_SHORT);
-        // TODO: openSendStickerDialog
+        sendStickerDialog(friendsRecyclerView, friendResults.get(position));
     }
 
     /**
@@ -270,6 +279,24 @@ public class FirebaseFriendListActivity extends AppCompatActivity implements Fri
 
         AlertDialog alert = b.create();
         alert.show();
+    }
+
+    /**
+     * Clicking any item in friend list recycler view will open a dialog to send stickers to them.
+     * @param view view
+     * @param friendToSend the friend who receives the sticker
+     */
+    public void sendStickerDialog(View view, Friend friendToSend) {
+        AlertDialog.Builder sendDialog = new AlertDialog.Builder(this);
+        sendDialog.setTitle("Choose a sticker to send");
+        View sendDialogView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.dialog_send_sticker_w_recycler_view, null);
+        sendDialog.setView(sendDialogView);
+        sendDialog.setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel());
+
+        RecyclerView stickersRecyclerView = findViewById(R.id.send_sticker_recycler_view);
+        stickersRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        stickersRecyclerView.setAdapter(new StickerAdapter(availableStickerList, this));
+
     }
 
     private boolean usernameExistenceInFriendsList(String friendUsername) {
